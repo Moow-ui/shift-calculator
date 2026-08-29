@@ -277,32 +277,32 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
 
             {!absent ? (
               <>
-                {/* 1. 출근 시각 & 퇴근 시각 (메인 전면 배치) */}
-                <div className="p-3.5 bg-slate-100/90 rounded-2xl border border-slate-300 space-y-3 shadow-2xs">
-                  <div className="grid grid-cols-2 gap-2.5">
-                    <div>
-                      <label className="block text-xs font-extrabold text-slate-800 mb-1 flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-indigo-600" />
-                        출근 시각
+                {/* 1. 출근 시각 & 퇴근 시각 (iOS 사파리 겹침 방지 min-w-0 적용) */}
+                <div className="p-3.5 bg-slate-100/90 rounded-2xl border border-slate-300 space-y-3 shadow-2xs w-full min-w-0">
+                  <div className="grid grid-cols-2 gap-3 w-full min-w-0">
+                    <div className="w-full min-w-0 flex flex-col">
+                      <label className="block text-xs font-extrabold text-slate-800 mb-1 flex items-center gap-1 truncate">
+                        <Clock className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
+                        <span>출근 시각</span>
                       </label>
                       <input
                         type="time"
                         value={startTime}
                         onChange={(e) => setStartTime(e.target.value)}
-                        className="w-full px-2.5 py-2 text-sm font-extrabold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 text-slate-900 shadow-2xs text-center"
+                        className="w-full min-w-0 px-2 py-2 text-sm font-extrabold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 text-slate-900 shadow-2xs text-center appearance-none"
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-extrabold text-slate-800 mb-1 flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-indigo-600" />
-                        퇴근 시각
+                    <div className="w-full min-w-0 flex flex-col">
+                      <label className="block text-xs font-extrabold text-slate-800 mb-1 flex items-center gap-1 truncate">
+                        <Clock className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
+                        <span>퇴근 시각</span>
                       </label>
                       <input
                         type="time"
                         value={endTime}
                         onChange={(e) => setEndTime(e.target.value)}
-                        className="w-full px-2.5 py-2 text-sm font-extrabold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 text-slate-900 shadow-2xs text-center"
+                        className="w-full min-w-0 px-2 py-2 text-sm font-extrabold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 text-slate-900 shadow-2xs text-center appearance-none"
                       />
                     </div>
                   </div>
