@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shift-calculator.moow-ui.workers.dev/sitemap.xml
