@@ -86,7 +86,10 @@ export const App: React.FC = () => {
     );
   };
 
-  // URL에서 초기 상태 복원
+  const STORAGE_KEY = 'ALBA_PAYROLL_LOCAL_DATA_V1';
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // 1. 초기 로드 (URL 공유 상태 우선, 없으면 기기 내 로컬 스토리지에서 자동 복원)
   useEffect(() => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -100,12 +103,45 @@ export const App: React.FC = () => {
           if (decoded.presets?.[0]?.hourlyWage) {
             setBaseHourlyWage(decoded.presets[0].hourlyWage);
           }
+          setIsLoaded(true);
+          return;
         }
       }
+
+      // 기기 로컬 스토리지 확인
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.config) setConfig(parsed.config);
+        if (parsed.presets) setPresets(parsed.presets);
+        if (parsed.workDays) setWorkDays(parsed.workDays);
+        if (parsed.baseHourlyWage) setBaseHourlyWage(parsed.baseHourlyWage);
+        if (parsed.viewMode) setViewMode(parsed.viewMode);
+      }
     } catch (err) {
-      console.error('URL 복원 오류', err);
+      console.error('로컬 데이터 복원 오류', err);
+    } finally {
+      setIsLoaded(true);
     }
   }, []);
+
+  // 2. 변경될 때마다 브라우저 로컬 스토리지에 자동 저장
+  useEffect(() => {
+    if (!isLoaded) return; // 초기 로드 전 기본값 덮어쓰기 방지
+    try {
+      const payload = {
+        config,
+        presets,
+        workDays,
+        baseHourlyWage,
+        viewMode,
+        updatedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch (err) {
+      console.error('로컬스토리지 자동 저장 실패', err);
+    }
+  }, [config, presets, workDays, baseHourlyWage, viewMode, isLoaded]);
 
   // 프리셋 추가 / 수정 / 삭제
   const handleAddPreset = (preset: ShiftPreset) => {
@@ -213,10 +249,12 @@ export const App: React.FC = () => {
 
   // 초기화
   const handleReset = () => {
-    if (window.confirm('모든 설정을 기본값으로 초기화하시겠습니까?')) {
+    if (window.confirm('모든 설정을 기본값으로 초기화하시겠습니까? (저장된 근무 기록이 모두 삭제됩니다)')) {
+      localStorage.removeItem(STORAGE_KEY);
       setConfig(defaultInitialConfig);
       setPresets(defaultPresets);
       setWorkDays([]);
+      setBaseHourlyWage(getMinimumWage(DEFAULT_YEAR));
       window.history.replaceState({}, '', window.location.pathname);
     }
   };
