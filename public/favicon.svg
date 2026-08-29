@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="50%" stop-color="#4338CA" />
+      <stop offset="100%" stop-color="#312E81" />
+    </linearGradient>
+
+    <!-- Calendar Body Gradient -->
+    <linearGradient id="calGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+
+    <!-- Calendar Top Bar Gradient -->
+    <linearGradient id="topBarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+
+    <!-- Gold Coin Gradient -->
+    <linearGradient id="coinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+
+    <!-- Shadow -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.35" />
+    </filter>
+    
+    <filter id="coinShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#78350F" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- App Icon Base (Squircle) -->
+  <rect width="512" height="512" rx="120" fill="url(#bgGrad)" />
+
+  <!-- Inner Soft Glow -->
+  <rect x="12" y="12" width="488" height="488" rx="108" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="4" />
+
+  <!-- Calendar Container with Shadow -->
+  <g filter="url(#dropShadow)">
+    <!-- Calendar Body -->
+    <rect x="88" y="100" width="336" height="320" rx="36" fill="url(#calGrad)" />
+    
+    <!-- Calendar Top Bar Header -->
+    <path d="M 88 136 C 88 115.898 103.898 100 124 100 L 388 100 C 408.102 100 424 115.898 424 136 L 424 180 L 88 180 Z" fill="url(#topBarGrad)" />
+    
+    <!-- Binder Rings -->
+    <rect x="156" y="76" width="24" height="48" rx="12" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="3" />
+    <rect x="332" y="76" width="24" height="48" rx="12" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="3" />
+
+    <!-- Calendar Month Text/Dots Header -->
+    <circle cx="140" cy="140" r="7" fill="#A5B4FC" />
+    <circle cx="164" cy="140" r="7" fill="#A5B4FC" />
+    <circle cx="188" cy="140" r="7" fill="#A5B4FC" />
+
+    <!-- Calendar Grid Cells (Work Days) -->
+    <!-- Row 1 -->
+    <rect x="128" y="210" width="44" height="38" rx="10" fill="#E2E8F0" />
+    <rect x="190" y="210" width="44" height="38" rx="10" fill="#4F46E5" />
+    <rect x="252" y="210" width="44" height="38" rx="10" fill="#4F46E5" />
+    <rect x="314" y="210" width="44" height="38" rx="10" fill="#E2E8F0" />
+
+    <!-- Row 2 -->
+    <rect x="128" y="264" width="44" height="38" rx="10" fill="#4F46E5" />
+    <rect x="190" y="264" width="44" height="38" rx="10" fill="#4F46E5" />
+    <rect x="252" y="264" width="44" height="38" rx="10" fill="#10B981" />
+    <rect x="314" y="264" width="44" height="38" rx="10" fill="#E2E8F0" />
+
+    <!-- Row 3 -->
+    <rect x="128" y="318" width="44" height="38" rx="10" fill="#E2E8F0" />
+    <rect x="190" y="318" width="44" height="38" rx="10" fill="#4F46E5" />
+    <rect x="252" y="318" width="44" height="38" rx="10" fill="#4F46E5" />
+    <rect x="314" y="318" width="44" height="38" rx="10" fill="#EF4444" />
+  </g>
+
+  <!-- Glowing Gold Coin Badge (Won ₩ Currency Badge) -->
+  <g filter="url(#coinShadow)" transform="translate(300, 270)">
+    <circle cx="70" cy="70" r="68" fill="url(#coinGrad)" stroke="#FEF08A" stroke-width="6" />
+    <circle cx="70" cy="70" r="54" fill="none" stroke="#B45309" stroke-width="2.5" stroke-dasharray="6,4" />
+    
+    <!-- ₩ Symbol -->
+    <text x="70" y="88" font-family="'Pretendard', -apple-system, sans-serif" font-weight="900" font-size="58" fill="#78350F" text-anchor="middle">₩</text>
+  </g>
+
+  <!-- Sparkles -->
+  <path d="M 120 70 Q 130 90 150 100 Q 130 110 120 130 Q 110 110 90 100 Q 110 90 120 70 Z" fill="#FDE047" opacity="0.9" />
+  <path d="M 430 190 Q 436 202 448 208 Q 436 214 430 226 Q 424 214 412 208 Q 424 202 430 190 Z" fill="#67E8F9" opacity="0.8" />
+</svg>
