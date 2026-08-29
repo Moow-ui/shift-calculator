@@ -18,6 +18,7 @@ import {
   FileText,
   ChevronDown,
   ChevronUp,
+  MessageSquarePlus,
 } from 'lucide-react';
 import { eachDayOfInterval, startOfMonth, endOfMonth, getDay, format } from 'date-fns';
 import { getKoreanHoliday } from './config/holidays';
@@ -410,6 +411,18 @@ export const App: React.FC = () => {
           )}
         </main>
       </div>
+
+      {/* 우측 하단 플로팅 의견 보내기 버튼 */}
+      <a
+        href="https://docs.google.com/forms/d/e/1FAIpQLSfy5VXWSE6QWMHURRSdtM5CXmBFKiK_M472c-wN1aa34Pa29w/viewform?usp=header"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-4 right-4 z-40 inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 bg-slate-900/90 hover:bg-slate-900 text-white rounded-full text-[11px] sm:text-xs font-extrabold shadow-lg hover:shadow-xl border border-slate-700/80 backdrop-blur-xs transition-all hover:scale-105 active:scale-95 touch-target"
+        title="구글 폼으로 개선 의견이나 문의 보내기"
+      >
+        <MessageSquarePlus className="w-3.5 h-3.5 text-amber-400" />
+        <span>의견 보내기</span>
+      </a>
 
       {/* 모달 */}
       <ImportModal
