@@ -158,7 +158,6 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
 
   // 날짜 셀 클릭 (칠하기 또는 모달 열기)
   const handleCellClick = (dateStr: string, isCurrMonth: boolean) => {
-    // 전월/익월 회색 날짜는 칠하기 대상에서 제외
     if (!isCurrMonth) return;
 
     if (isLongPressTriggeredRef.current) {
@@ -166,17 +165,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
       return;
     }
 
-    // 1. 프리셋 활성 상태: 칠하기 (원터치 적용/토글)
+    // 1. 프리셋 활성 상태: 칠하기
     if (activePresetId) {
       recordUndo();
       const existing = workDayMap.get(dateStr);
       const holiday = getKoreanHoliday(dateStr);
 
-      // 이미 같은 프리셋이 적용되어 있고 개별 수정이 없다면 -> 토글 해제(삭제)
       if (existing && existing.presetId === activePresetId && !existing.overrides) {
         onDeleteWorkDay(dateStr);
       } else {
-        // 프리셋 적용 (덮어쓰기)
         onSetWorkDay({
           date: dateStr,
           presetId: activePresetId,
@@ -186,7 +183,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
       return;
     }
 
-    // 2. 프리셋 비활성 상태: 기존 시간 입력 모달 열기
+    // 2. 프리셋 비활성 상태: 기존 시간 입력 모달
     setSelectedDate(dateStr);
     setIsModalOpen(true);
   };
@@ -217,7 +214,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
     setIsModalOpen(true);
   };
 
-  // 요일 헤더 클릭 (핵심: 요일 일괄 칠하기 / 토글)
+  // 요일 헤더 클릭 (요일 일괄 칠하기 / 토글)
   const handleHeaderClick = (dayOfWeekNumber: number, headerName: string) => {
     if (!activePresetId) {
       setHeaderHintMsg(`💡 아래 프리셋을 먼저 선택하시면 '${headerName}요일'을 한 번에 채울 수 있어요!`);
@@ -227,12 +224,10 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
 
     recordUndo();
 
-    // 현재 월의 해당 요일 날짜들 추출
     const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
     const targetMonthDays = monthDays.filter((d) => getDay(d) === dayOfWeekNumber);
     const targetDateStrs = targetMonthDays.map((d) => format(d, 'yyyy-MM-dd'));
 
-    // 해당 요일 날짜들이 전부 현재 활성 프리셋으로 채워져 있는지 확인
     const allFilledWithActive = targetDateStrs.every((dateStr) => {
       const wd = workDayMap.get(dateStr);
       return wd && wd.presetId === activePresetId && !wd.absent && !wd.overrides;
@@ -241,11 +236,8 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
     let updatedWorkDays = [...workDays];
 
     if (allFilledWithActive) {
-      // 전부 채워져 있으면 일괄 해제 (토글 OFF)
       updatedWorkDays = updatedWorkDays.filter((wd) => !targetDateStrs.includes(wd.date));
     } else {
-      // 일부만 채워져 있거나 비어 있으면 일괄 적용 (토글 ON)
-      // 기존 날짜 제거 후 새 프리셋으로 등록
       updatedWorkDays = updatedWorkDays.filter((wd) => !targetDateStrs.includes(wd.date));
       for (const dateStr of targetDateStrs) {
         const holiday = getKoreanHoliday(dateStr);
@@ -330,15 +322,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
   return (
     <div className="space-y-3 sm:space-y-4 w-full min-w-0">
       {/* 1. 달력 메인 카드 */}
-      <section className="bg-white rounded-2xl border border-slate-300/80 shadow-md shadow-slate-200/60 p-3 sm:p-5 space-y-3 sm:space-y-3.5 w-full min-w-0 overflow-hidden">
+      <section className="bg-white rounded-2xl border border-[var(--ab-line)] shadow-sm p-3 sm:p-5 space-y-3 sm:space-y-3.5 w-full min-w-0 overflow-hidden">
         {/* 달력 상단 바: 연/월 선택 & 내 시급 입력란 */}
-        <div className="grid grid-cols-2 gap-2 pb-2.5 border-b border-slate-200 w-full min-w-0">
+        <div className="grid grid-cols-2 gap-2 pb-2.5 border-b border-[var(--ab-line)] w-full min-w-0">
           {/* 연/월 선택 박스 */}
-          <div className="flex items-center justify-between bg-slate-100/90 p-0.5 sm:p-1 rounded-xl border border-slate-300 shadow-2xs h-10 w-full min-w-0">
+          <div className="flex items-center justify-between bg-slate-100/90 p-0.5 sm:p-1 rounded-xl border border-[var(--ab-line)] shadow-2xs h-10 w-full min-w-0">
             <button
               type="button"
               onClick={handlePrevMonth}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg hover:bg-white active:bg-slate-200 text-slate-700 transition-colors touch-target flex items-center justify-center flex-shrink-0"
+              className="w-8 h-8 rounded-lg hover:bg-white active:bg-slate-200 text-slate-700 transition-colors touch-target flex items-center justify-center flex-shrink-0 min-w-[32px] min-h-[32px]"
               title="이전 달"
             >
               <ChevronLeft className="w-4 h-4 text-slate-700" />
@@ -351,7 +343,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                   const y = parseInt(e.target.value, 10);
                   onChangeConfig((prev) => ({ ...prev, year: y }));
                 }}
-                className="appearance-none bg-transparent text-xs sm:text-sm font-extrabold text-slate-900 focus:outline-none cursor-pointer text-center px-0.5 py-1"
+                className="appearance-none bg-transparent text-xs sm:text-sm font-extrabold text-[var(--ab-text)] focus:outline-none cursor-pointer text-center px-0.5 py-1"
               >
                 {[2024, 2025, 2026, 2027].map((y) => (
                   <option key={y} value={y}>
@@ -366,7 +358,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                   const m = parseInt(e.target.value, 10);
                   onChangeConfig((prev) => ({ ...prev, month: m }));
                 }}
-                className="appearance-none bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded-lg border border-indigo-200 focus:outline-none cursor-pointer text-xs sm:text-sm font-extrabold text-center shadow-2xs"
+                className="appearance-none bg-[var(--ab-boss-soft)] text-[var(--ab-boss)] px-1.5 py-0.5 rounded-lg border border-blue-200 focus:outline-none cursor-pointer text-xs sm:text-sm font-extrabold text-center shadow-2xs"
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                   <option key={m} value={m}>
@@ -379,7 +371,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
             <button
               type="button"
               onClick={handleNextMonth}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg hover:bg-white active:bg-slate-200 text-slate-700 transition-colors touch-target flex items-center justify-center flex-shrink-0"
+              className="w-8 h-8 rounded-lg hover:bg-white active:bg-slate-200 text-slate-700 transition-colors touch-target flex items-center justify-center flex-shrink-0 min-w-[32px] min-h-[32px]"
               title="다음 달"
             >
               <ChevronRight className="w-4 h-4 text-slate-700" />
@@ -387,15 +379,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
           </div>
 
           {/* 내 시급 입력 박스 */}
-          <div className="flex items-center justify-between bg-slate-100/90 p-1 px-2 rounded-xl border border-slate-300 shadow-2xs h-10 w-full min-w-0">
-            <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1 whitespace-nowrap flex-shrink-0">
-              <DollarSign className="w-3.5 h-3.5 text-indigo-600" />
+          <div className="flex items-center justify-between bg-slate-100/90 p-1 px-2 rounded-xl border border-[var(--ab-line)] shadow-2xs h-10 w-full min-w-0">
+            <span className="text-xs font-extrabold text-[var(--ab-text)] flex items-center gap-1 whitespace-nowrap flex-shrink-0">
+              <DollarSign className="w-3.5 h-3.5 text-[var(--ab-boss)]" />
               <span>시급</span>
             </span>
 
             <div className="flex items-center gap-1 min-w-0 flex-1 justify-end">
               {isWageHidden ? (
-                <div className="px-2 py-0.5 text-xs sm:text-sm font-extrabold bg-white border border-slate-300 rounded-lg text-slate-400 tracking-widest text-center shadow-2xs flex-1 max-w-[70px] sm:max-w-[85px]">
+                <div className="px-2 py-0.5 text-xs sm:text-sm font-extrabold bg-white border border-[var(--ab-line)] rounded-lg text-slate-400 tracking-widest text-center shadow-2xs flex-1 max-w-[70px] sm:max-w-[85px]">
                   •••••
                 </div>
               ) : (
@@ -406,19 +398,19 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                     step="100"
                     value={baseHourlyWage}
                     onChange={(e) => onUpdateBaseWage(parseInt(e.target.value, 10) || 0)}
-                    className="w-full max-w-[62px] sm:max-w-[80px] px-1 py-0.5 text-xs sm:text-sm font-extrabold bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-indigo-500/20 text-right shadow-2xs"
+                    className="w-full max-w-[62px] sm:max-w-[80px] px-1 py-0.5 text-xs sm:text-sm font-extrabold bg-white border border-[var(--ab-line)] rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500/20 text-right shadow-2xs"
                   />
-                  <span className="text-[11px] sm:text-xs font-bold text-slate-600 ml-0.5 flex-shrink-0">원</span>
+                  <span className="text-[12px] font-bold text-slate-600 ml-0.5 flex-shrink-0">원</span>
                 </div>
               )}
 
               <button
                 type="button"
                 onClick={() => setIsWageHidden((v) => !v)}
-                className={`p-1 rounded-lg border text-xs font-bold flex items-center justify-center transition-all flex-shrink-0 ${
+                className={`p-1 min-w-[32px] min-h-[32px] rounded-lg border text-xs font-bold flex items-center justify-center transition-all flex-shrink-0 ${
                   isWageHidden
-                    ? 'bg-indigo-50 border-indigo-300 text-indigo-700 shadow-2xs'
-                    : 'bg-white border-slate-300 text-slate-600 hover:text-slate-900 shadow-2xs'
+                    ? 'bg-[var(--ab-boss-soft)] border-blue-300 text-[var(--ab-boss)] shadow-2xs'
+                    : 'bg-white border-[var(--ab-line)] text-slate-600 hover:text-slate-900 shadow-2xs'
                 }`}
                 title={isWageHidden ? '시급 보이기' : '시급 가리기 (주변 시선 차단)'}
               >
@@ -430,14 +422,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
 
         {/* 달력 상단 액션 바: [✨ 1초 예시] + [↩️ 되돌리기] + [🗑️ 비우기] */}
         <div className="flex items-center justify-between gap-1.5 w-full min-w-0">
+          {/* 1초 예시 (보조 버튼 크기로 축소) */}
           <button
             type="button"
             onClick={handleLoadSampleWithUndo}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2 text-xs font-extrabold text-amber-950 bg-amber-200/90 hover:bg-amber-300 active:bg-amber-400 border border-amber-400/90 rounded-xl shadow-xs transition-all touch-target truncate"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 min-h-[40px] text-xs font-bold text-[var(--ab-text)] bg-white hover:bg-[var(--ab-bg)] active:bg-slate-100 border border-[var(--ab-line-strong)] rounded-xl shadow-2xs transition-all touch-target flex-shrink-0"
             title="테스트용 평일+주말+공휴일 알바 예시를 채웁니다"
           >
-            <FileCheck2 className="w-3.5 h-3.5 text-amber-800 flex-shrink-0" />
-            <span className="truncate">✨ 1초 예시</span>
+            <FileCheck2 className="w-3.5 h-3.5 text-[var(--ab-boss)] flex-shrink-0" />
+            <span>1초 예시</span>
           </button>
 
           {/* ↩️ 되돌리기 (Undo) 버튼 */}
@@ -445,9 +438,9 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
             type="button"
             onClick={handleUndo}
             disabled={undoStack.length === 0}
-            className={`inline-flex items-center justify-center gap-1 px-2.5 py-2 text-xs font-bold rounded-xl border shadow-2xs transition-all touch-target flex-shrink-0 ${
+            className={`inline-flex items-center justify-center gap-1 px-3 py-2 min-h-[40px] text-xs font-bold rounded-xl border shadow-2xs transition-all touch-target flex-shrink-0 ${
               undoStack.length > 0
-                ? 'bg-indigo-50 text-indigo-700 border-indigo-300 hover:bg-indigo-100 active:bg-indigo-200 cursor-pointer'
+                ? 'bg-[var(--ab-boss-soft)] text-[var(--ab-boss)] border-blue-300 hover:bg-blue-100 active:bg-blue-200 cursor-pointer'
                 : 'bg-slate-100 text-slate-400 border-slate-200 opacity-50 cursor-not-allowed'
             }`}
             title="마지막 작업 되돌리기"
@@ -456,10 +449,11 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
             <span>되돌리기</span>
           </button>
 
+          {/* 비우기 버튼 */}
           <button
             type="button"
             onClick={handleClearMonth}
-            className="inline-flex items-center justify-center gap-1 px-2.5 py-2 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 border border-rose-200 rounded-xl shadow-2xs transition-all touch-target flex-shrink-0"
+            className="inline-flex items-center justify-center gap-1 px-3 py-2 min-h-[40px] text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 border border-rose-200 rounded-xl shadow-2xs transition-all touch-target flex-shrink-0"
             title="이번 달 근무 전체 비우기"
           >
             <Trash2 className="w-3.5 h-3.5 text-rose-600" />
@@ -467,15 +461,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
           </button>
         </div>
 
-        {/* 요일 헤더 안내 툴팁 (비활성 상태에서 요일 탭 시) */}
+        {/* 요일 헤더 안내 툴팁 */}
         {headerHintMsg && (
-          <div className="p-2 bg-indigo-50 border border-indigo-200 rounded-xl text-xs text-indigo-900 font-bold text-center animate-fadeIn">
+          <div className="p-2 bg-[var(--ab-boss-soft)] border border-blue-200 rounded-xl text-xs text-[var(--ab-boss)] font-bold text-center animate-fadeIn">
             {headerHintMsg}
           </div>
         )}
 
-        {/* 요일 헤더 (터치 가능: 탭 영역 44px 이상 확보 & 활성 프리셋 시 일괄 적용) */}
-        <div className="grid grid-cols-7 gap-0.5 sm:gap-1 text-center bg-slate-100/90 p-0.5 rounded-xl border border-slate-200 w-full">
+        {/* 요일 헤더 (최소 44px 이상 터치 영역) */}
+        <div className="grid grid-cols-7 gap-0.5 sm:gap-1 text-center bg-slate-100/90 p-0.5 rounded-xl border border-[var(--ab-line)] w-full">
           {dayHeaders.map((header) => {
             const isSun = header.dayNum === 0;
             const isSat = header.dayNum === 6;
@@ -487,7 +481,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                 onClick={() => handleHeaderClick(header.dayNum, header.name)}
                 className={`min-h-[44px] h-11 flex flex-col items-center justify-center rounded-lg transition-all touch-target select-none ${
                   activePresetId
-                    ? 'hover:bg-indigo-100 active:bg-indigo-200 bg-white/70 shadow-2xs border border-indigo-200 cursor-pointer'
+                    ? 'hover:bg-blue-100 active:bg-blue-200 bg-white/70 shadow-2xs border border-blue-300 cursor-pointer'
                     : 'hover:bg-slate-200/50 cursor-pointer'
                 }`}
                 title={
@@ -497,14 +491,14 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                 }
               >
                 <span
-                  className={`text-xs sm:text-sm font-extrabold ${
-                    isSun ? 'text-rose-600' : isSat ? 'text-blue-600' : 'text-slate-800'
+                  className={`text-[12px] sm:text-sm font-extrabold ${
+                    isSun ? 'text-rose-600' : isSat ? 'text-blue-600' : 'text-[var(--ab-text)]'
                   }`}
                 >
                   {header.name}
                 </span>
                 {activePresetId && (
-                  <span className="text-[9px] text-indigo-600 font-bold leading-none mt-0.5">
+                  <span className="text-[10px] text-[var(--ab-boss)] font-bold leading-none mt-0.5">
                     일괄
                   </span>
                 )}
@@ -513,7 +507,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
           })}
         </div>
 
-        {/* 달력 날짜 그리드 (모바일 100% 핏) */}
+        {/* 달력 날짜 그리드 (최소 40px 터치 영역 & 글씨 12px 이상 말줄임) */}
         <div className="grid grid-cols-7 gap-0.5 sm:gap-1.5 w-full">
           {calendarDays.map((dayDate) => {
             const dateStr = format(dayDate, 'yyyy-MM-dd');
@@ -543,31 +537,31 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                 onTouchEnd={handleTouchEndOrCancel}
                 onTouchMove={handleTouchEndOrCancel}
                 onContextMenu={(e) => handleContextMenu(e, dateStr, isCurrMonth)}
-                className={`min-h-[52px] sm:min-h-[82px] p-0.5 sm:p-2 rounded-lg sm:rounded-xl text-left flex flex-col justify-between transition-all touch-target relative group w-full min-w-0 overflow-hidden select-none ${
+                className={`min-h-[56px] sm:min-h-[84px] p-1 sm:p-2 rounded-lg sm:rounded-xl text-left flex flex-col justify-between transition-all touch-target relative group w-full min-w-0 overflow-hidden select-none ${
                   !isCurrMonth
                     ? 'bg-slate-100/60 border border-slate-200 text-slate-400 opacity-40 cursor-default'
                     : work
                     ? hasOverrides
                       ? 'bg-amber-50/70 border-2 border-amber-500 shadow-2xs'
-                      : 'bg-indigo-50/70 border-2 border-indigo-500 shadow-2xs'
+                      : 'bg-[var(--ab-boss-soft)] border-2 border-[var(--ab-boss)] shadow-2xs'
                     : holiday
                     ? 'bg-rose-50/40 border border-rose-300 hover:border-rose-400 text-slate-800 shadow-2xs'
                     : activePresetId
-                    ? 'bg-white border border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/30 text-slate-800 shadow-2xs'
-                    : 'bg-white border border-slate-300 hover:border-indigo-400 text-slate-800 shadow-2xs'
+                    ? 'bg-white border border-[var(--ab-line)] hover:border-[var(--ab-boss)] hover:bg-[var(--ab-boss-soft)]/40 text-slate-800 shadow-2xs'
+                    : 'bg-white border border-[var(--ab-line)] hover:border-[var(--ab-boss)] text-slate-800 shadow-2xs'
                 }`}
               >
                 {/* 상단: 날짜 번호 + 공휴일 표시 + 개별수정 뱃지 */}
                 <div className="flex items-start justify-between w-full min-w-0 leading-none">
                   <span
-                    className={`text-[11px] sm:text-sm font-extrabold ${
+                    className={`text-[12px] sm:text-sm font-extrabold ${
                       !isCurrMonth
                         ? 'text-slate-400'
                         : holiday || isSun
                         ? 'text-rose-600'
                         : isSat
                         ? 'text-blue-600'
-                        : 'text-slate-900'
+                        : 'text-[var(--ab-text)]'
                     }`}
                   >
                     {dayNum}
@@ -575,7 +569,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
 
                   {/* 개별 수정 날짜 표시 (연필 아이콘) */}
                   {hasOverrides && isCurrMonth && (
-                    <span className="text-[8px] font-bold text-amber-700 bg-amber-100 px-0.5 rounded leading-tight" title="개별 시간 수정됨">
+                    <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-0.5 rounded leading-tight" title="개별 시간 수정됨">
                       ✏️
                     </span>
                   )}
@@ -583,7 +577,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                   {/* 공휴일 표시 */}
                   {holiday && isCurrMonth && !hasOverrides && (
                     <span
-                      className="text-[8px] sm:text-[9px] font-extrabold text-rose-700 bg-rose-100 border border-rose-300 px-0.5 py-0.2 rounded truncate max-w-[24px] sm:max-w-[70px] leading-tight"
+                      className="text-[10px] sm:text-[11px] font-extrabold text-rose-700 bg-rose-100 border border-rose-300 px-0.5 py-0.2 rounded truncate max-w-[28px] sm:max-w-[70px] leading-tight"
                       title={holiday.name}
                     >
                       <span className="sm:hidden">{holiday.name.slice(0, 2)}</span>
@@ -592,49 +586,49 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                   )}
                 </div>
 
-                {/* 하단: 근무 상태 표시 */}
+                {/* 하단: 근무 상태 표시 (글씨 12px 이상, 말줄임 적용) */}
                 {work ? (
                   <div className="mt-0.5 w-full min-w-0">
                     {work.absent ? (
-                      <span className="block w-full text-[8px] sm:text-[10px] font-extrabold text-rose-700 bg-rose-100 border border-rose-300 rounded px-0.5 py-0.2 text-center truncate">
+                      <span className="block w-full text-[12px] font-extrabold text-rose-700 bg-rose-100 border border-rose-300 rounded px-0.5 py-0.2 text-center truncate">
                         결근
                       </span>
                     ) : (
                       <>
-                        {/* 모바일 뷰: 깔끔한 근무 시간 알약 배지 */}
+                        {/* 모바일 뷰: 깔끔한 12px 알약 배지 */}
                         <div className="sm:hidden w-full min-w-0">
-                          <div className={`w-full text-[9px] font-extrabold rounded px-0.5 py-0.2 text-center truncate flex items-center justify-center gap-0.5 border ${
+                          <div className={`w-full text-[12px] font-extrabold rounded px-0.5 py-0.2 text-center truncate flex items-center justify-center gap-0.5 border ${
                             hasOverrides
                               ? 'text-amber-900 bg-amber-100 border-amber-300'
-                              : 'text-indigo-800 bg-indigo-100 border-indigo-300'
+                              : 'text-[var(--ab-boss)] bg-[var(--ab-boss-soft)] border-blue-300'
                           }`}>
-                            <span>{workHoursNum}h</span>
+                            <span className="truncate">{workHoursNum}h</span>
                             {(work.isHoliday || holiday) && (
-                              <span className="w-1 h-1 rounded-full bg-rose-500 flex-shrink-0" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 flex-shrink-0" />
                             )}
                           </div>
                         </div>
 
                         {/* 데스크톱 PC 뷰: 상세 시간 및 라벨 */}
                         <div className="hidden sm:block space-y-0.5 w-full min-w-0">
-                          <div className={`text-[10px] font-bold rounded px-1.5 py-0.5 truncate border ${
+                          <div className={`text-[12px] font-bold rounded px-1.5 py-0.5 truncate border ${
                             hasOverrides
                               ? 'text-amber-900 bg-amber-100 border-amber-300'
-                              : 'text-indigo-800 bg-indigo-100/90 border-indigo-300'
+                              : 'text-[var(--ab-boss)] bg-[var(--ab-boss-soft)] border-blue-300'
                           }`}>
                             {work.overrides?.label || preset?.label || '근무'} ({workHoursNum}h)
                           </div>
-                          <div className="text-[10px] text-slate-700 font-semibold truncate">
+                          <div className="text-[12px] text-slate-700 font-semibold truncate">
                             {startTime}~{endTime}
                           </div>
                           <div className="flex flex-wrap gap-0.5">
                             {work.late && (
-                              <span className="text-[9px] bg-amber-100 text-amber-800 border border-amber-300 px-1 rounded font-bold">
+                              <span className="text-[10px] bg-amber-100 text-amber-800 border border-amber-300 px-1 rounded font-bold">
                                 지각
                               </span>
                             )}
                             {(work.isHoliday || holiday) && (
-                              <span className="text-[9px] bg-purple-100 text-purple-800 border border-purple-300 px-1 rounded font-bold">
+                              <span className="text-[10px] bg-purple-100 text-purple-800 border border-purple-300 px-1 rounded font-bold">
                                 휴일
                               </span>
                             )}
@@ -654,12 +648,12 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
         </div>
 
         {/* 🎨 프리셋 칠하기 칩 바 (달력 바로 아래 항상 노출) */}
-        <div className="pt-2 border-t border-slate-200 space-y-2 w-full min-w-0">
+        <div className="pt-2 border-t border-[var(--ab-line)] space-y-2 w-full min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-              <Paintbrush className="w-3.5 h-3.5 text-indigo-600" />
+            <span className="text-xs sm:text-sm font-extrabold text-[var(--ab-text)] flex items-center gap-1.5">
+              <Paintbrush className="w-3.5 h-3.5 text-[var(--ab-boss)]" />
               <span>프리셋 칠하기:</span>
-              <span className="text-[10px] font-medium text-slate-500 hidden xs:inline">
+              <span className="text-[11px] font-medium text-[var(--ab-text-3)] hidden xs:inline">
                 (칩 선택 후 날짜나 요일 탭)
               </span>
             </span>
@@ -667,7 +661,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
             <button
               type="button"
               onClick={() => setShowPresetManager((v) => !v)}
-              className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5"
+              className="text-xs font-bold text-[var(--ab-boss)] hover:underline flex items-center gap-0.5 min-h-[36px]"
             >
               <span>프리셋 관리/추가</span>
               {showPresetManager ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -683,15 +677,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                   key={preset.id}
                   type="button"
                   onClick={() => handleTogglePresetChip(preset.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all touch-target shadow-2xs ${
+                  className={`px-3 py-1.5 min-h-[40px] rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 transition-all touch-target shadow-2xs ${
                     isActive
-                      ? 'bg-indigo-600 text-white shadow-md ring-2 ring-indigo-500/40 border border-indigo-600 scale-[1.02]'
-                      : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300'
+                      ? 'bg-[var(--ab-boss)] text-white shadow-md ring-2 ring-blue-400 border border-[var(--ab-boss)] scale-[1.02]'
+                      : 'bg-white hover:bg-slate-50 text-[var(--ab-text)] border border-[var(--ab-line-strong)]'
                   }`}
                 >
-                  {isActive ? <Check className="w-3.5 h-3.5 text-white" /> : <Sparkles className="w-3.5 h-3.5 text-indigo-600" />}
-                  <span>{preset.label}</span>
-                  <span className={`text-[10px] px-1 py-0.2 rounded font-normal ${isActive ? 'bg-white/20 text-indigo-100' : 'bg-white text-slate-600 border border-slate-200'}`}>
+                  {isActive ? <Check className="w-3.5 h-3.5 text-white" /> : <Sparkles className="w-3.5 h-3.5 text-[var(--ab-boss)]" />}
+                  <span className="truncate">{preset.label}</span>
+                  <span className={`text-[11px] px-1 py-0.2 rounded font-normal ${isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-[var(--ab-text-2)] border border-slate-200'}`}>
                     {preset.startTime}~{preset.endTime}
                   </span>
                 </button>
@@ -701,9 +695,9 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
         </div>
 
         {/* 달력 하단 상태별 동적 안내 문구 */}
-        <div className={`p-2.5 rounded-xl text-xs text-center transition-all ${
+        <div className={`p-2.5 rounded-xl text-xs sm:text-sm text-center transition-all ${
           activePresetId
-            ? 'bg-indigo-50 border border-indigo-300 text-indigo-950 font-bold'
+            ? 'bg-[var(--ab-boss-soft)] border border-blue-300 text-[var(--ab-boss)] font-bold'
             : 'bg-slate-100 text-slate-600'
         }`}>
           {activePresetId ? (
@@ -719,13 +713,13 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
 
         {/* 프리셋 관리 아코디언 */}
         {showPresetManager && (
-          <div className="p-3 sm:p-4 pt-2 border-t border-slate-200 bg-slate-50/70 space-y-3 animate-fadeIn w-full min-w-0 rounded-xl">
+          <div className="p-3 sm:p-4 pt-2 border-t border-[var(--ab-line)] bg-slate-50/70 space-y-3 animate-fadeIn w-full min-w-0 rounded-xl">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-800">등록된 근무 프리셋 목록</span>
+              <span className="text-xs sm:text-sm font-bold text-[var(--ab-text)]">등록된 근무 프리셋 목록</span>
               <button
                 type="button"
                 onClick={handleAddNewPreset}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 min-h-[36px] text-xs font-bold text-white bg-[var(--ab-boss)] hover:bg-[var(--ab-boss-hover)] rounded-lg shadow-xs transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>새 프리셋 추가</span>
@@ -746,15 +740,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                   return (
                     <div
                       key={preset.id}
-                      className="p-3 rounded-xl border-2 border-indigo-500 bg-white space-y-2.5 shadow-sm"
+                      className="p-3 rounded-xl border-2 border-[var(--ab-boss)] bg-white space-y-2.5 shadow-sm"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-indigo-900">프리셋 수정</span>
+                        <span className="text-xs font-bold text-[var(--ab-boss)]">프리셋 수정</span>
                         <div className="flex gap-1">
                           <button
                             type="button"
                             onClick={saveEditPreset}
-                            className="p-1 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                            className="p-1 min-w-[32px] min-h-[32px] bg-[var(--ab-boss)] text-white rounded hover:bg-[var(--ab-boss-hover)] flex items-center justify-center"
                           >
                             <Check className="w-3.5 h-3.5" />
                           </button>
@@ -764,7 +758,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                               setEditingPresetId(null);
                               setPresetEditForm(null);
                             }}
-                            className="px-2 py-0.5 bg-slate-200 text-slate-700 rounded text-[11px]"
+                            className="px-2 py-0.5 min-h-[32px] bg-slate-200 text-slate-700 rounded text-[11px] flex items-center justify-center"
                           >
                             취소
                           </button>
@@ -777,13 +771,13 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                         onChange={(e) =>
                           setPresetEditForm((p) => p && { ...p, label: e.target.value })
                         }
-                        className="w-full px-2 py-1 text-xs bg-slate-50 border border-slate-300 rounded"
+                        className="w-full px-2 py-1.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded"
                         placeholder="프리셋 이름 (예: 평일 마감)"
                       />
 
                       <div className="grid grid-cols-3 gap-1 text-xs">
                         <div>
-                          <label className="text-[10px] text-slate-500 block">시작</label>
+                          <label className="text-[11px] text-slate-500 block">시작</label>
                           <input
                             type="time"
                             value={presetEditForm.startTime}
@@ -794,7 +788,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-slate-500 block">종료</label>
+                          <label className="text-[11px] text-slate-500 block">종료</label>
                           <input
                             type="time"
                             value={presetEditForm.endTime}
@@ -805,7 +799,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-slate-500 block">휴게(분)</label>
+                          <label className="text-[11px] text-slate-500 block">휴게(분)</label>
                           <input
                             type="number"
                             min="0"
@@ -820,7 +814,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                       </div>
 
                       <div>
-                        <label className="text-[10px] text-slate-500 block">시급 (원)</label>
+                        <label className="text-[11px] text-slate-500 block">시급 (원)</label>
                         <input
                           type="number"
                           min="0"
@@ -829,7 +823,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                           onChange={(e) =>
                             setPresetEditForm((p) => p && { ...p, hourlyWage: parseInt(e.target.value, 10) || 0 })
                           }
-                          className="w-full px-2 py-1 text-xs bg-slate-50 border border-slate-300 rounded"
+                          className="w-full px-2 py-1.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded"
                         />
                       </div>
                     </div>
@@ -839,16 +833,16 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                 return (
                   <div
                     key={preset.id}
-                    className="p-3 bg-white rounded-xl border border-slate-300/90 shadow-2xs flex flex-col justify-between"
+                    className="p-3 bg-white rounded-xl border border-[var(--ab-line)] shadow-2xs flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-extrabold text-xs text-slate-900">{preset.label}</span>
+                        <span className="font-extrabold text-xs sm:text-sm text-[var(--ab-text)]">{preset.label}</span>
                         <div className="flex items-center gap-1">
                           <button
                             type="button"
                             onClick={() => startEditPreset(preset)}
-                            className="p-1 text-slate-400 hover:text-indigo-600 rounded"
+                            className="p-1 min-w-[32px] min-h-[32px] text-slate-400 hover:text-[var(--ab-boss)] rounded flex items-center justify-center"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
                           </button>
@@ -856,7 +850,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                             <button
                               type="button"
                               onClick={() => onDeletePreset(preset.id)}
-                              className="p-1 text-slate-400 hover:text-rose-600 rounded"
+                              className="p-1 min-w-[32px] min-h-[32px] text-slate-400 hover:text-rose-600 rounded flex items-center justify-center"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -864,15 +858,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
                         </div>
                       </div>
 
-                      <div className="text-[11px] text-slate-700 space-y-0.5">
+                      <div className="text-[12px] text-slate-700 space-y-0.5">
                         <p>근무: {preset.startTime} ~ {preset.endTime} (휴게 {preset.breakMinutes}분)</p>
-                        <p>실근로: <strong className="text-indigo-700 font-bold">{formatMinutes(workMinutes)}</strong></p>
+                        <p>실근로: <strong className="text-[var(--ab-boss)] font-bold">{formatMinutes(workMinutes)}</strong></p>
                         <p>시급: <strong className="text-slate-900 font-bold">{preset.hourlyWage.toLocaleString()}원</strong></p>
                       </div>
                     </div>
 
                     {isBelowMinWage && (
-                      <p className="text-[10px] text-rose-600 mt-2 flex items-center gap-1 font-semibold">
+                      <p className="text-[11px] text-rose-600 mt-2 flex items-center gap-1 font-semibold">
                         <AlertCircle className="w-3 h-3" />
                         최저시급({minWage.toLocaleString()}원)보다 낮습니다.
                       </p>
@@ -885,15 +879,15 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
         )}
       </section>
 
-      {/* 2. 하단 큰 버튼: 2번째 탭으로 이동 */}
-      <div className="p-3 sm:p-4 bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-2xl text-white shadow-md shadow-indigo-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 w-full">
+      {/* 2. 하단 띠: 단색 var(--ab-navy) 적용 */}
+      <div className="p-3 sm:p-4 bg-[var(--ab-navy)] rounded-2xl text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 w-full">
         <div className="text-center sm:text-left min-w-0">
           <div className="font-extrabold text-xs sm:text-base truncate">
             {currentMonthWorkCount > 0
               ? `이번 달 총 ${currentMonthWorkCount}일 근무 등록됨`
               : '달력 날짜를 터치해서 근무를 등록해보세요!'}
           </div>
-          <p className="text-[10px] sm:text-xs text-indigo-100 mt-0.5 truncate">
+          <p className="text-[11px] sm:text-xs text-slate-300 mt-0.5 truncate">
             등록한 근무를 바탕으로 주휴수당과 예상 월급을 계산합니다.
           </p>
         </div>
@@ -901,7 +895,7 @@ export const WorkRegistrationSection: React.FC<WorkRegistrationSectionProps> = (
         <button
           type="button"
           onClick={onGoToResult}
-          className="w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-3 bg-white text-indigo-700 hover:bg-indigo-50 active:bg-indigo-100 rounded-xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md transition-all touch-target flex-shrink-0"
+          className="w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-3 min-h-[44px] bg-white text-[var(--ab-boss)] hover:bg-slate-50 active:bg-slate-100 rounded-xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md transition-all touch-target flex-shrink-0"
         >
           <Coins className="w-4 h-4 text-emerald-600" />
           <span>이번 달 급여 계산 결과 보기 👉</span>

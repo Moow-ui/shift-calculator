@@ -423,16 +423,16 @@ export const App: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTab('RECORD')}
-                  className="flex-1 px-2.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-xs transition-colors truncate touch-target"
+                  className="flex-1 min-h-[40px] px-2.5 py-2 bg-white hover:bg-slate-50 text-[var(--ab-text)] border border-[var(--ab-line-strong)] rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 shadow-2xs transition-colors truncate touch-target"
                 >
-                  <CalendarDays className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
+                  <CalendarDays className="w-3.5 h-3.5 text-[var(--ab-boss)] flex-shrink-0" />
                   <span className="truncate">← 달력 수정</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab('GUIDE')}
-                  className="flex-1 px-2.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-xs transition-colors truncate touch-target"
+                  className="flex-1 min-h-[40px] px-2.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 shadow-2xs transition-colors truncate touch-target"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
                   <span className="truncate">상식 백과 →</span>
@@ -450,12 +450,12 @@ export const App: React.FC = () => {
         </main>
       </div>
 
-      {/* 우측 하단 플로팅 의견 보내기 버튼 */}
+      {/* 우측 하단 플로팅 의견 보내기 버튼 (남색 알약 모양 통일) */}
       <a
         href="https://docs.google.com/forms/d/e/1FAIpQLSfy5VXWSE6QWMHURRSdtM5CXmBFKiK_M472c-wN1aa34Pa29w/viewform?usp=header"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-4 right-4 z-40 inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 bg-slate-900/90 hover:bg-slate-900 text-white rounded-full text-[11px] sm:text-xs font-extrabold shadow-lg hover:shadow-xl border border-slate-700/80 backdrop-blur-xs transition-all hover:scale-105 active:scale-95 touch-target"
+        className="fixed bottom-4 right-4 z-40 inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] bg-[var(--ab-navy)] hover:bg-[#0f172a] text-white rounded-full text-[12px] font-extrabold shadow-lg hover:shadow-xl border border-slate-700/80 transition-all hover:scale-105 active:scale-95 touch-target"
         title="구글 폼으로 개선 의견이나 문의 보내기"
       >
         <MessageSquarePlus className="w-3.5 h-3.5 text-amber-400" />

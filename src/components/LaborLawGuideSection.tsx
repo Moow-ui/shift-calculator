@@ -188,15 +188,29 @@ export const LaborLawGuideSection: React.FC = () => {
     : guideItems.filter((item) => item.category === selectedCategory);
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6 space-y-5">
+    <section className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6 space-y-4">
+      {/* ALBA&BOSS 노무 Q&A 링크 배너 (상단 추가) */}
+      <a
+        href="https://albanboss.moow-ui.workers.dev/qna"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full p-3 bg-[var(--ab-boss-soft)] hover:bg-blue-100 border border-blue-200 rounded-xl flex items-center justify-between text-xs sm:text-sm font-bold text-[var(--ab-boss)] transition-all shadow-2xs group"
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <BookOpen className="w-4 h-4 text-[var(--ab-boss)] flex-shrink-0" />
+          <span className="truncate">더 많은 질문은 ALBA&BOSS 노무 Q&A에서 확인하세요</span>
+        </div>
+        <ExternalLink className="w-3.5 h-3.5 text-[var(--ab-boss)] flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
+      </a>
+
       <div className="flex items-center justify-between pb-3 border-b border-slate-100">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
+          <div className="w-8 h-8 rounded-lg bg-[var(--ab-boss-soft)] text-[var(--ab-boss)] flex items-center justify-center font-bold text-sm">
             📖
           </div>
           <div>
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-indigo-600" />
+              <BookOpen className="w-4 h-4 text-[var(--ab-boss)]" />
               알바생을 위한 쉬운 노무·세무 백과
             </h2>
             <p className="text-xs text-slate-500">
@@ -205,7 +219,7 @@ export const LaborLawGuideSection: React.FC = () => {
           </div>
         </div>
 
-        <span className="text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-100 hidden sm:inline-block">
+        <span className="text-[11px] font-semibold bg-[var(--ab-boss-soft)] text-[var(--ab-boss)] px-2.5 py-1 rounded-full border border-blue-100 hidden sm:inline-block">
           2026년 최저시급 {MINIMUM_WAGE[2026]?.toLocaleString()}원 기준
         </span>
       </div>
@@ -217,9 +231,9 @@ export const LaborLawGuideSection: React.FC = () => {
             key={cat}
             type="button"
             onClick={() => setSelectedCategory(cat)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all min-h-[36px] ${
               selectedCategory === cat
-                ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-200'
+                ? 'bg-[var(--ab-boss)] text-white shadow-xs'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
           >

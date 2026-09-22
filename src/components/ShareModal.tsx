@@ -39,7 +39,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden animate-scaleUp">
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-2">
-            <Share2 className="w-4 h-4 text-indigo-600" />
+            <Share2 className="w-4 h-4 text-[var(--ab-boss)]" />
             <h3 className="font-bold text-slate-900 text-sm">
               계산 결과 링크 공유
             </h3>
@@ -47,14 +47,14 @@ export const ShareModal: React.FC<ShareModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"
+            className="p-1.5 min-w-[36px] min-h-[36px] text-slate-400 hover:text-slate-600 rounded-lg flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <div className="p-5 space-y-3.5">
-          <p className="text-xs text-slate-600 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
             현재 입력한 사업장 설정, 근무 프리셋, 달력 근무표가 URL에 그대로 인코딩되어 있습니다. 이 링크를 사장님이나 동료에게 보내면 동일한 계산 화면을 즉시 열어볼 수 있습니다. (서버 저장 없음)
           </p>
 
@@ -63,12 +63,12 @@ export const ShareModal: React.FC<ShareModalProps> = ({
               type="text"
               readOnly
               value={shareUrl}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl pr-20 font-mono text-slate-700 select-all"
+              className="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl pr-20 text-slate-700 select-all"
             />
             <button
               type="button"
               onClick={handleCopy}
-              className="absolute right-1.5 top-1.5 px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+              className="absolute right-1 top-1 px-3 py-1.5 min-h-[32px] bg-[var(--ab-boss)] hover:bg-[var(--ab-boss-hover)] text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
             >
               {copied ? (
                 <>
@@ -89,7 +89,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors"
+            className="px-4 py-2 min-h-[40px] text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors"
           >
             닫기
           </button>

@@ -111,14 +111,14 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
   };
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-300/80 shadow-md shadow-slate-200/60 p-3 sm:p-5 space-y-4 w-full min-w-0">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
+    <section className="bg-white rounded-2xl border border-[var(--ab-line)] shadow-sm p-3 sm:p-5 space-y-4 w-full min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[var(--ab-line)] gap-2">
         <div>
-          <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 flex items-center gap-1.5">
+          <h3 className="font-extrabold text-xs sm:text-sm text-[var(--ab-text)] flex items-center gap-1.5">
             <FileText className="w-4 h-4 text-emerald-600 flex-shrink-0" />
             <span>주차별 근무 기록 및 주휴수당 계산 근거</span>
           </h3>
-          <p className="text-[11px] text-slate-500 mt-0.5">
+          <p className="text-[12px] text-[var(--ab-text-3)] mt-0.5">
             각 주차별 15시간 달성 여부와 주휴수당 발생 내역을 투명하게 증명합니다.
           </p>
         </div>
@@ -128,7 +128,7 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
           <button
             type="button"
             onClick={handleCopyBossText}
-            className={`px-2.5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1 transition-all shadow-2xs border ${
+            className={`px-3 py-2 min-h-[40px] rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-2xs border ${
               copied
                 ? 'bg-emerald-600 text-white border-emerald-700'
                 : 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100 active:bg-emerald-200'
@@ -142,7 +142,7 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
           <button
             type="button"
             onClick={handlePrint}
-            className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors shadow-2xs"
+            className="px-3 py-2 min-h-[40px] bg-white hover:bg-slate-50 text-[var(--ab-text)] border border-[var(--ab-line-strong)] rounded-xl text-xs font-bold flex items-center gap-1 transition-colors shadow-2xs"
             title="인쇄 또는 PDF로 저장합니다"
           >
             <Printer className="w-3.5 h-3.5" />
@@ -161,34 +161,34 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
               key={week.weekIndex}
               className={`rounded-2xl border transition-all overflow-hidden shadow-2xs w-full min-w-0 ${
                 week.totalWorkMinutes > 0
-                  ? 'border-slate-300 bg-white'
+                  ? 'border-[var(--ab-line)] bg-white'
                   : 'border-slate-200 bg-slate-100/60 opacity-60'
               }`}
             >
-              {/* 주차 헤더 (모바일 완벽 가독성 레이아웃) */}
+              {/* 주차 헤더 */}
               <button
                 type="button"
                 onClick={() => toggleWeek(week.weekIndex)}
-                className="w-full p-3 sm:p-4 text-left hover:bg-slate-50 transition-colors space-y-2.5"
+                className="w-full p-3 sm:p-4 text-left hover:bg-slate-50 transition-colors space-y-2.5 min-h-[44px]"
               >
                 {/* 1행: [1주차] 뱃지 + 기간 + 이번 주 급여 & 접기 아이콘 */}
                 <div className="flex items-center justify-between w-full min-w-0 gap-2">
                   <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-lg font-black text-xs sm:text-sm bg-indigo-100 text-indigo-900 border border-indigo-200 flex-shrink-0">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-lg font-black text-xs sm:text-sm bg-[var(--ab-boss-soft)] text-[var(--ab-boss)] border border-blue-200 flex-shrink-0">
                       {week.weekIndex}주차
                     </span>
-                    <span className="text-xs sm:text-sm text-slate-600 font-bold whitespace-nowrap">
+                    <span className="text-xs sm:text-sm text-[var(--ab-text-2)] font-bold whitespace-nowrap">
                       ({week.startDate.slice(5)} ~ {week.endDate.slice(5)})
                     </span>
                     {week.isSplitWeek && (
-                      <span className="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.2 rounded font-bold whitespace-nowrap">
+                      <span className="text-[11px] bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.2 rounded font-bold whitespace-nowrap">
                         월경계 안분 ({Math.round(week.allocationRatio * 100)}%)
                       </span>
                     )}
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-xs sm:text-sm font-black text-indigo-700">
+                    <span className="text-xs sm:text-sm font-black text-[var(--ab-boss)]">
                       {week.totalWeeklyGrossPay.toLocaleString()}원
                     </span>
                     <div className="p-1 rounded-lg bg-slate-100 text-slate-600 border border-slate-200">
@@ -197,15 +197,15 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
                   </div>
                 </div>
 
-                {/* 2행: 요약 뱃지들 (실근로, 근무일, 주휴수당 발생 여부) */}
+                {/* 2행: 요약 뱃지들 */}
                 <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/80 text-xs w-full min-w-0 flex-wrap">
-                  <div className="flex items-center gap-1.5 text-slate-700 text-[11px] sm:text-xs flex-wrap">
+                  <div className="flex items-center gap-1.5 text-slate-700 text-[12px] flex-wrap">
                     <span>주 실근로: <strong className="text-slate-900 font-bold">{formatMinutes(week.totalWorkMinutes)}</strong> ({week.totalWorkDaysCount}일)</span>
                     <span className="text-slate-300">·</span>
                     <span>가중시급: <strong className="text-slate-900 font-bold">{week.weightedAverageHourlyWage.toLocaleString()}원</strong></span>
                   </div>
 
-                  <div className="text-[11px] sm:text-xs">
+                  <div className="text-[12px]">
                     {week.weeklyHolidayEligible ? (
                       <span className="text-emerald-800 font-extrabold inline-flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
@@ -222,7 +222,7 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
 
               {/* 펼쳐진 상세 계산 근거 */}
               {isOpen && (
-                <div className="px-3 pb-3.5 sm:px-4 sm:pb-4 pt-2.5 border-t border-slate-200 bg-slate-50/70 text-xs space-y-3 animate-fadeIn w-full min-w-0">
+                <div className="px-3 pb-3.5 sm:px-4 sm:pb-4 pt-2.5 border-t border-[var(--ab-line)] bg-slate-50/70 text-xs space-y-3 animate-fadeIn w-full min-w-0">
                   {/* 주휴수당 판정 근거 배너 */}
                   <div
                     className={`p-3 sm:p-3.5 rounded-xl border flex items-start gap-2.5 shadow-2xs ${
@@ -237,19 +237,19 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
                       <AlertCircle className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />
                     )}
                     <div className="space-y-1 w-full min-w-0">
-                      <div className="font-bold flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                      <div className="font-bold flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[12px]">
                         <span>
                           {week.weeklyHolidayEligible
                             ? `주휴수당: ${formatMinutes(week.weeklyHolidayMinutes)}분 × 시급 ${week.weightedAverageHourlyWage.toLocaleString()}원 = ${week.weeklyHolidayPayTotal.toLocaleString()}원`
                             : `주휴수당 미지급 (${week.weeklyHolidayIneligibleReason})`}
                         </span>
                         {week.isSplitWeek && week.weeklyHolidayEligible && (
-                          <span className="text-[10px] sm:text-[11px] font-bold text-emerald-800 bg-white px-2 py-0.5 rounded-full border border-emerald-300 shadow-2xs self-start sm:self-auto">
+                          <span className="text-[11px] font-bold text-emerald-800 bg-white px-2 py-0.5 rounded-full border border-emerald-300 shadow-2xs self-start sm:self-auto">
                             이번 달 반영액: {week.weeklyHolidayPayMonthAllocated.toLocaleString()}원 ({Math.round(week.allocationRatio * 100)}%)
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] leading-relaxed opacity-90">
+                      <p className="text-[12px] leading-relaxed opacity-90 text-slate-700">
                         {week.weeklyHolidayEligible
                           ? `주 소정근로시간이 15시간 이상(${formatMinutes(week.totalWorkMinutes)})이고 결근이 없어 주휴수당이 정상 발생합니다.`
                           : week.hasAbsent
@@ -257,26 +257,26 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
                           : '주 실근로시간이 15시간 미만이므로 주휴수당 지급 대상이 아닙니다.'}
                       </p>
                       {week.isSplitWeek && (
-                        <p className="text-[10px] text-amber-900 bg-amber-100 p-2 rounded-lg border border-amber-300 mt-1">
+                        <p className="text-[11px] text-amber-900 bg-amber-100 p-2 rounded-lg border border-amber-300 mt-1">
                           ⚠️ 이 주는 전월 또는 다음 달로 이어지는 주이므로, 이번 달 근무일 수({week.currentMonthWorkDaysCount}일 / 총 {week.totalWorkDaysCount}일) 비율로 안분 계산되었습니다.
                         </p>
                       )}
                     </div>
                   </div>
 
-                  {/* 일별 근무 목록 (모바일 카드 + 데스크톱 테이블) */}
+                  {/* 일별 근무 목록 (글씨 12px 이상, 말줄임) */}
                   {workingDays.length > 0 ? (
                     <div className="overflow-x-auto w-full">
-                      <table className="w-full text-[11px] border-collapse bg-white rounded-xl overflow-hidden border border-slate-300 shadow-2xs">
+                      <table className="w-full text-[12px] border-collapse bg-white rounded-xl overflow-hidden border border-slate-300 shadow-2xs">
                         <thead>
                           <tr className="bg-slate-100 text-slate-800 text-left border-b border-slate-300">
-                            <th className="py-2 px-2.5 font-bold">날짜</th>
-                            <th className="py-2 px-2.5 font-bold">근무 시간</th>
-                            <th className="py-2 px-2 font-bold text-center">휴게</th>
-                            <th className="py-2 px-2 font-bold text-center">실근로</th>
-                            <th className="py-2 px-2.5 font-bold text-right">적용시급</th>
-                            <th className="py-2 px-2.5 font-bold text-right">일 기본급</th>
-                            {isOver5 && <th className="py-2 px-2.5 font-bold text-right">가산수당</th>}
+                            <th className="py-2.5 px-2.5 font-bold">날짜</th>
+                            <th className="py-2.5 px-2.5 font-bold">근무 시간</th>
+                            <th className="py-2.5 px-2 font-bold text-center">휴게</th>
+                            <th className="py-2.5 px-2 font-bold text-center">실근로</th>
+                            <th className="py-2.5 px-2.5 font-bold text-right">적용시급</th>
+                            <th className="py-2.5 px-2.5 font-bold text-right">일 기본급</th>
+                            {isOver5 && <th className="py-2.5 px-2.5 font-bold text-right">가산수당</th>}
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200">
@@ -287,39 +287,39 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
                                 d.absent ? 'bg-rose-50/50 text-rose-800' : ''
                               }`}
                             >
-                              <td className="py-2 px-2.5 font-bold whitespace-nowrap">
+                              <td className="py-2.5 px-2.5 font-bold whitespace-nowrap">
                                 <div className="flex items-center gap-1">
                                   <span>{d.date.slice(5)}</span>
                                   {d.isHoliday && (
-                                    <span className="text-[9px] bg-rose-100 text-rose-700 px-1 rounded font-bold">
+                                    <span className="text-[10px] bg-rose-100 text-rose-700 px-1 rounded font-bold">
                                       휴일
                                     </span>
                                   )}
                                   {d.late && (
-                                    <span className="text-[9px] bg-amber-100 text-amber-800 px-1 rounded font-bold">
+                                    <span className="text-[10px] bg-amber-100 text-amber-800 px-1 rounded font-bold">
                                       지각
                                     </span>
                                   )}
                                 </div>
                               </td>
-                              <td className="py-2 px-2.5 text-slate-700 whitespace-nowrap">
+                              <td className="py-2.5 px-2.5 text-slate-700 whitespace-nowrap">
                                 {d.absent ? '결근' : `${d.startTime}~${d.endTime}`}
                               </td>
-                              <td className="py-2 px-2 text-slate-500 text-center whitespace-nowrap">
+                              <td className="py-2.5 px-2 text-slate-500 text-center whitespace-nowrap">
                                 {d.absent ? '-' : `${d.breakMinutes}분`}
                               </td>
-                              <td className="py-2 px-2 font-bold text-slate-900 text-center whitespace-nowrap">
+                              <td className="py-2.5 px-2 font-bold text-slate-900 text-center whitespace-nowrap">
                                 {d.absent ? '0분' : formatMinutes(d.workMinutes)}
                               </td>
-                              <td className="py-2 px-2.5 text-right font-medium text-slate-700 whitespace-nowrap">
+                              <td className="py-2.5 px-2.5 text-right font-medium text-slate-700 whitespace-nowrap">
                                 {d.effectiveHourlyWage.toLocaleString()}원
                               </td>
-                              <td className="py-2 px-2.5 text-right font-bold text-slate-900 whitespace-nowrap">
+                              <td className="py-2.5 px-2.5 text-right font-bold text-slate-900 whitespace-nowrap">
                                 {d.basePay.toLocaleString()}원
                               </td>
                               {isOver5 && (
-                                <td className="py-2 px-2.5 text-right font-bold text-indigo-600 whitespace-nowrap">
-                                  {(d.nightPay + d.holidayPay).toLocaleString()}원
+                                <td className="py-2.5 px-2.5 text-right font-bold text-[var(--ab-boss)] whitespace-nowrap">
+                                {(d.nightPay + d.holidayPay).toLocaleString()}원
                                 </td>
                               )}
                             </tr>
@@ -334,7 +334,7 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
                   )}
 
                   {/* 주차 요약 하단 바 */}
-                  <div className="p-2.5 bg-white rounded-xl border border-slate-200 flex items-center justify-between text-xs font-extrabold flex-wrap gap-2">
+                  <div className="p-2.5 bg-white rounded-xl border border-slate-200 flex items-center justify-between text-xs sm:text-sm font-extrabold flex-wrap gap-2">
                     <span className="text-slate-700">{week.weekIndex}주차 귀속 합계:</span>
                     <div className="flex items-center gap-3 text-right">
                       <span className="text-slate-600 font-semibold">
@@ -346,11 +346,11 @@ export const WeeklyBreakdownSection: React.FC<WeeklyBreakdownSectionProps> = ({
                         </span>
                       )}
                       {isOver5 && (week.overtimePay + week.nightPay + week.holidayPay) > 0 && (
-                        <span className="text-indigo-600 font-bold">
+                        <span className="text-[var(--ab-boss)] font-bold">
                           가산: +{(week.overtimePay + week.nightPay + week.holidayPay).toLocaleString()}원
                         </span>
                       )}
-                      <span className="text-indigo-700 text-sm font-black border-l border-slate-300 pl-2">
+                      <span className="text-[var(--ab-boss)] text-sm font-black border-l border-slate-300 pl-2">
                         총 {week.totalWeeklyGrossPay.toLocaleString()}원
                       </span>
                     </div>

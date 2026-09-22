@@ -234,7 +234,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
               <button
                 type="button"
                 onClick={() => setIsEditingMode(true)}
-                className="w-full py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                className="w-full py-2.5 px-3 min-h-[40px] bg-[var(--ab-boss)] hover:bg-[var(--ab-boss-hover)] active:bg-blue-900 text-white rounded-xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm transition-all"
               >
                 <Edit3 className="w-3.5 h-3.5" />
                 <span>근무 시간 수정하기</span>
@@ -244,7 +244,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="px-3 py-1.5 text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg flex items-center gap-1 transition-colors"
+                  className="px-3 py-2 min-h-[40px] text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg flex items-center gap-1 transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>근무 삭제</span>
@@ -253,7 +253,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-1.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                  className="px-4 py-2 min-h-[40px] text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
                 >
                   닫기
                 </button>
@@ -269,7 +269,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                 <span className="font-bold flex items-center gap-1">
                   🎉 {holidayInfo.name} (공휴일)
                 </span>
-                <span className="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-md font-bold">
+                <span className="text-[11px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-md font-bold">
                   빨간날 자동인식
                 </span>
               </div>
@@ -282,27 +282,27 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                   <div className="grid grid-cols-2 gap-3 w-full min-w-0">
                     <div className="w-full min-w-0 flex flex-col">
                       <label className="block text-xs font-extrabold text-slate-800 mb-1 flex items-center gap-1 truncate">
-                        <Clock className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
+                        <Clock className="w-3.5 h-3.5 text-[var(--ab-boss)] flex-shrink-0" />
                         <span>출근 시각</span>
                       </label>
                       <input
                         type="time"
                         value={startTime}
                         onChange={(e) => setStartTime(e.target.value)}
-                        className="w-full min-w-0 px-2 py-2 text-sm font-extrabold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 text-slate-900 shadow-2xs text-center appearance-none"
+                        className="w-full min-w-0 px-2 py-2 text-sm font-extrabold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500/20 text-slate-900 shadow-2xs text-center appearance-none"
                       />
                     </div>
 
                     <div className="w-full min-w-0 flex flex-col">
                       <label className="block text-xs font-extrabold text-slate-800 mb-1 flex items-center gap-1 truncate">
-                        <Clock className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
+                        <Clock className="w-3.5 h-3.5 text-[var(--ab-boss)] flex-shrink-0" />
                         <span>퇴근 시각</span>
                       </label>
                       <input
                         type="time"
                         value={endTime}
                         onChange={(e) => setEndTime(e.target.value)}
-                        className="w-full min-w-0 px-2 py-2 text-sm font-extrabold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 text-slate-900 shadow-2xs text-center appearance-none"
+                        className="w-full min-w-0 px-2 py-2 text-sm font-extrabold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500/20 text-slate-900 shadow-2xs text-center appearance-none"
                       />
                     </div>
                   </div>
@@ -316,9 +316,9 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                           key={mins}
                           type="button"
                           onClick={() => setBreakMinutes(mins)}
-                          className={`px-2 py-0.5 rounded-lg text-xs font-bold transition-colors ${
+                          className={`px-2 py-1 min-h-[32px] rounded-lg text-xs font-bold transition-colors ${
                             breakMinutes === mins
-                              ? 'bg-indigo-600 text-white shadow-2xs'
+                              ? 'bg-[var(--ab-boss)] text-white shadow-2xs'
                               : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
                           }`}
                         >
@@ -332,9 +332,9 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                           step="10"
                           value={breakMinutes}
                           onChange={(e) => setBreakMinutes(parseInt(e.target.value, 10) || 0)}
-                          className="w-full pl-1.5 pr-4 py-0.5 text-xs font-bold bg-white border border-slate-300 rounded-lg text-right shadow-2xs"
+                          className="w-full pl-1.5 pr-4 py-1 text-xs font-bold bg-white border border-slate-300 rounded-lg text-right shadow-2xs"
                         />
-                        <span className="absolute right-1 top-1 text-[10px] text-slate-400">분</span>
+                        <span className="absolute right-1 top-1.5 text-[11px] text-slate-400">분</span>
                       </div>
                     </div>
                   </div>
@@ -342,9 +342,9 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                   {/* 실근로시간 및 예상 일당 실시간 계산 */}
                   <div className="p-2.5 bg-white rounded-xl border border-slate-300 flex items-center justify-between text-xs shadow-2xs">
                     <span className="text-slate-600 font-semibold">실제 일한 시간:</span>
-                    <span className="font-extrabold text-indigo-700 text-sm">
+                    <span className="font-extrabold text-[var(--ab-boss)] text-sm">
                       {formatMinutes(workMinutes)}{' '}
-                      <span className="text-[11px] font-bold text-slate-800">
+                      <span className="text-[12px] font-bold text-slate-800">
                         ({earnedDailyPay.toLocaleString()}원)
                       </span>
                     </span>
@@ -354,7 +354,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                 {/* 2. 빠른 프리셋 선택 버튼 (있을 경우) */}
                 {presets.length > 0 && (
                   <div className="space-y-1">
-                    <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
+                    <span className="text-[12px] font-bold text-slate-500 flex items-center gap-1">
                       <Sparkles className="w-3 h-3 text-amber-500" />
                       자주 쓰는 시간으로 채우기:
                     </span>
@@ -364,7 +364,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                           key={preset.id}
                           type="button"
                           onClick={() => handleQuickPreset(preset)}
-                          className="px-2.5 py-1 text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 border border-slate-300 hover:border-indigo-300 rounded-lg font-bold transition-colors"
+                          className="px-2.5 py-1.5 min-h-[36px] text-xs bg-slate-100 hover:bg-[var(--ab-boss-soft)] hover:text-[var(--ab-boss)] border border-slate-300 hover:border-blue-300 rounded-lg font-bold transition-colors"
                         >
                           {preset.label} ({preset.startTime}~{preset.endTime})
                         </button>
@@ -381,7 +381,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                       <span className="font-extrabold text-xs text-purple-950">
                         빨간날(유급휴일)로 계산하기
                       </span>
-                      <p className="text-[10px] text-purple-700">
+                      <p className="text-[11px] text-purple-700">
                         법정공휴일 또는 주휴일에 일한 경우 가산 적용
                       </p>
                     </div>
@@ -397,7 +397,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
             ) : (
               <div className="p-4 bg-rose-50 border border-rose-300 rounded-xl text-center text-xs text-rose-800 space-y-1">
                 <p className="font-bold">❌ 결근으로 설정되었습니다.</p>
-                <p className="text-[11px] opacity-90">
+                <p className="text-[12px] opacity-90">
                   약속된 근무일에 출근하지 않으면 해당 주의 주휴수당이 발생하지 않습니다.
                 </p>
               </div>
@@ -405,7 +405,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
 
             {/* 4. 하단 특이사항 (결근 · 지각/조퇴) */}
             <div className="p-2.5 bg-slate-100/80 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
-              <span className="text-[11px] font-bold text-slate-500">특이사항:</span>
+              <span className="text-[12px] font-bold text-slate-500">특이사항:</span>
               <div className="flex items-center gap-3">
                 <label className="flex items-center gap-1 cursor-pointer">
                   <input
@@ -414,7 +414,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                     onChange={(e) => setAbsent(e.target.checked)}
                     className="w-3.5 h-3.5 rounded text-rose-600 border-slate-300"
                   />
-                  <span className={`text-[11px] ${absent ? 'font-extrabold text-rose-600' : 'text-slate-600'}`}>
+                  <span className={`text-[12px] ${absent ? 'font-extrabold text-rose-600' : 'text-slate-600'}`}>
                     결근 (안 나감)
                   </span>
                 </label>
@@ -426,7 +426,7 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
                     onChange={(e) => setLate(e.target.checked)}
                     className="w-3.5 h-3.5 rounded text-amber-600 border-slate-300"
                   />
-                  <span className={`text-[11px] ${late ? 'font-extrabold text-amber-800' : 'text-slate-600'}`}>
+                  <span className={`text-[12px] ${late ? 'font-extrabold text-amber-800' : 'text-slate-600'}`}>
                     지각/조퇴
                   </span>
                 </label>
@@ -438,14 +438,14 @@ export const DateEditModal: React.FC<DateEditModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-2.5 px-3 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors text-center"
+                className="flex-1 py-2.5 px-3 min-h-[40px] text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors text-center"
               >
                 취소
               </button>
               <button
                 type="button"
                 onClick={handleSave}
-                className="flex-2 py-2.5 px-4 text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5"
+                className="flex-2 py-2.5 px-4 min-h-[40px] text-xs font-extrabold text-white bg-[var(--ab-boss)] hover:bg-[var(--ab-boss-hover)] active:bg-blue-900 rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>이 날 근무 저장하기</span>
