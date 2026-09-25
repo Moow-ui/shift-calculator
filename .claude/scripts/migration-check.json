@@ -1,0 +1,10 @@
+{
+  "repo": "Moow-ui/shift-calculator",
+  "siteUrl": "https://shift-calculator.moow-ui.workers.dev",
+  "paths": ["/", "/robots.txt", "/sitemap.xml", "/assets/css/tokens.css", "/og-image.png"],
+  "protected": ["src/lib", "src/config", "src/types"],
+  "workflowsDir": null,
+  "spa": true,
+  "deployIgnoreFile": null,
+  "deployNote": "빌드 결과(dist/)만 배포 — CLAUDE.md·.claude/는 빌드 결과에 들어가지 않음"
+}
